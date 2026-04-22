@@ -1,6 +1,6 @@
 import subprocess
 import os
-import sys
+import click
 
 def split_video_by_size(video_path, *, output_dir=".", max_size_gb=3.9):
     max_size_bytes = max_size_gb * 1024**3 # multiply max size gb by bytes per gb
@@ -10,7 +10,6 @@ def split_video_by_size(video_path, *, output_dir=".", max_size_gb=3.9):
         return
     
     num_parts = int(-(-file_size // max_size_bytes)) # ceiling division to get num of parts to split video to
-    print(num_parts)
     # get the duration of the video
     get_duration_result = subprocess.run(
         ['ffprobe', '-v', 'error', '-show_entries', 'format=duration',
@@ -18,7 +17,6 @@ def split_video_by_size(video_path, *, output_dir=".", max_size_gb=3.9):
          capture_output=True, text=True
     )
     duration = float(get_duration_result.stdout)
-    print(duration)
 
     segment_duration = duration / num_parts
 
@@ -50,14 +48,15 @@ def get_videos_from_dir(dir_path):
     videos = [video for video in os.listdir(dir_path) if os.path.splitext(os.path.basename(video))[1].lower() in ['.mp4', '.mov']]
     return videos
 
-def main():
-    if len(sys.argv) < 3:
-        print("Usage: python main.py <directory path> <max size (GB)> <optional: delete original (True/False)>")
-        return
-
-    dir_path = sys.argv[1]
-    max_size_gb = float(sys.argv[2])
-    delete_original = sys.argv[3].lower() == 'true' if len(sys.argv) > 3 else False
+@click.command()
+@click.argument('directory', type=click.Path(exists=True))
+@click.option('-s', '--size', 'size', type=float, default=3.9, help='Maximum file size in GB (default: 3.9)')
+@click.option('-d', '--delete', 'delete', is_flag=True, help='Delete original videos after splitting')
+def cli(directory, size, delete):
+    """Split videos in directory to chunks of given size GB."""
+    dir_path = directory
+    max_size_gb = size
+    delete_original = delete
     videos = get_videos_from_dir(dir_path)
     print(f"Found {len(videos)} videos in directory '{dir_path}':")
     for video in videos:
@@ -71,4 +70,4 @@ def main():
             print(f"Deleted original video: {video}")
 
 if __name__ == "__main__":
-    main()
+    cli()

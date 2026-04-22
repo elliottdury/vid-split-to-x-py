@@ -1,7 +1,13 @@
 [project]
 name = "vid-split-to-x-py"
 version = "0.1.0"
-description = "Add your description here"
+description = "Split all videos in a directory into equal parts so that each part takes up less than X GB."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = ["click"]
+
+[project.scripts]
+vid-split-to-x = "vid_split_to_x.cli:cli"
+
+[tool.setuptools.packages.find]
+include = ["vid_split_to_x*"]
