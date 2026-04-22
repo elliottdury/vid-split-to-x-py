@@ -45,7 +45,7 @@ def split_video_by_size(video_path, *, output_dir=".", max_size_gb=3.9):
     print(f"Done processing video {base_name}{extension}")
 
 def get_videos_from_dir(dir_path):
-    videos = [video for video in os.listdir(dir_path) if os.path.splitext(os.path.basename(video))[1].lower() in ['.mp4', '.mov']]
+    videos = [video for video in os.listdir(dir_path) if os.path.splitext(os.path.basename(video))[1].lower() in ['.mp4', '.mov', '.avi', '.mkv']]
     return videos
 
 @click.command()
