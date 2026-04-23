@@ -14,12 +14,32 @@ brew install ffmpeg
 sudo apt install ffmpeg
 ```
 
+I recommend installing `pipx` as well to run the CLI tool.
+
+```bash
+brew install pipx
+```
+
 ## Install
 
 Requires Python 3.13+ and [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
+```
+
+```bash
+uv build
+```
+
+```bash
+pipx install dist/vid_split_to_x_py-0.1.0-py3-none-any.whl
+```
+
+If everything is set up correctly, you should now be able to run:
+
+```bash
+vid-split-to-x --help
 ```
 
 ## Usage
